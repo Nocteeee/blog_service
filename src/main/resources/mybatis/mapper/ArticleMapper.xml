@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nocte.mapper.ArticleMapper">
+    <select id="queryAllArticle" resultType="Article">
+      select * from t_article
+    </select>
+
+    <select id="queryArticleById" resultType="Article">
+      select * from t_article where id=#{id}
+    </select>
+
+    <insert id="addArticle" parameterType="Article">
+      insert into
+      t_article(title,submit,is_top,category_id,create_time,modified_time)
+      values (#{title},#{submit},#{is_top},#{category_id},#{create_time},#{modified_time})
+    </insert>
+
+    <update id="updateArticle" parameterType="Article">
+      update t_article set
+      title=#{title},submit=#{submit},is_top=#{is_top},category_id=#{category_id},create_time=#{create_time},modified_time=#{modified_time}
+      where id=#{id}
+    </update>
+
+    <delete id="deleteArticle">
+      delete from t_article where id=#{id}
+    </delete>
+
+</mapper>
