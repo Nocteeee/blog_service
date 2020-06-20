@@ -1,0 +1,22 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@0.0.12
+
+workflows:
+  maven_test:
+    jobs:
+      - maven/test # checkout, build, test, and upload test results
+      - add_ssh_keys:
+        fingerprints:
+          - "66:b8:ab:2e:a1:f7:5e:f8:5d:f3:86:5c:b5:6b:c1:04"
+          - run: echo $REMOTE_HOSTKEY >> ~/.ssh/known_hosts
+          - deploy:
+              name: deploy
+              command: |
+                if [ "${CIRCLE_BRANCH}" = "master" ]; then
+                  rsync -avce ssh build $SSH_USER@$SSH_IP:/website/corki-ui-web/
+                else
+                  echo "Not master branch, dry run only"
+                fi
+          - run: echo '部署完毕'
