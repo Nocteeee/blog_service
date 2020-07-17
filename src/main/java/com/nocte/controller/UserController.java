@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     private TokenServiceImpl tokenServiceImpl;
 
-    @GetMapping("getAllUser")
+    @GetMapping("getList")
     @UserLoginToken
     public RestResponse<List<User>> queryUserList(){
         RestResponse<List<User>> response = null;
@@ -34,24 +34,36 @@ public class UserController {
         return response;
     }
 
-    @GetMapping("getUserById")
-    public User queryUserById(String id){
-        return userServiceImpl.queryUserById(id);
+    @GetMapping("getById")
+    @UserLoginToken
+    public RestResponse<Object> queryUserById(String id){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(userServiceImpl.queryUserById(id));
+        return response;
     }
 
-    @PostMapping("addUser")
-    public int addUser(User user){
-        return userServiceImpl.addUser(user);
+    @PostMapping("add")
+    @UserLoginToken
+    public RestResponse<Object> addUser(User user){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(userServiceImpl.addUser(user));
+        return response;
     }
 
-    @PostMapping("updateUser")
-    public int updateUser(User user){
-        return userServiceImpl.updateUser(user);
+    @PostMapping("update")
+    @UserLoginToken
+    public RestResponse<Object> updateUser(User user){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(userServiceImpl.updateUser(user));
+        return response;
     }
 
-    @PostMapping("deleteUser")
-    public int deleteUser(int id){
-        return userServiceImpl.deleteUser(id);
+    @PostMapping("delete")
+    @UserLoginToken
+    public RestResponse<Object> deleteUser(int id){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(userServiceImpl.deleteUser(id));
+        return response;
     }
 
     @GetMapping("login")
@@ -66,7 +78,6 @@ public class UserController {
             jsonObject.put("message","登录失败,用户不存在");
             response = RestResponseUtil.error(401,"登录失败,用户不存在");
         }else {
-
             if (!userForBase.getHashed_password().equals(password)){
                 jsonObject.put("message","登录失败,密码错误");
                 response = RestResponseUtil.error(401,"登录失败,密码错误");

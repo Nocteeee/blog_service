@@ -7,24 +7,38 @@
       select * from t_article
     </select>
 
-    <select id="queryArticleById" resultType="Article">
-      select * from t_article where id=#{id}
+    <select id="queryArticleById" resultMap="articleResult" >
+        select t_article.id,title,submit,is_top,category_id,create_time,modified_time,content from t_article,t_content
+        where t_article.id = #{id} and t_content.article_id = t_article.id
     </select>
 
-    <insert id="addArticle" parameterType="Article">
+    <insert id="addArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
       insert into
-      t_article(title,submit,is_top,category_id,create_time,modified_time)
-      values (#{title},#{submit},#{is_top},#{category_id},#{create_time},#{modified_time})
+      t_article(title,submit,is_top,category_id,create_time)
+      values (#{title},#{submit},#{is_top},#{category_id},#{create_time})
     </insert>
 
-    <update id="updateArticle" parameterType="Article">
-      update t_article set
-      title=#{title},submit=#{submit},is_top=#{is_top},category_id=#{category_id},create_time=#{create_time},modified_time=#{modified_time}
-      where id=#{id}
+    <update id="updateArticle">
+      update t_article t_a left join t_content t_c on
+       t_c.article_id = t_a.id
+      set
+        t_a.title=#{title},t_a.submit=#{submit},t_a.is_top=#{is_top},t_a.category_id=#{category_id},t_a.modified_time=#{modified_time},t_c.content=#{content}
+      where t_a.id=#{id} and t_a.id = t_c.article_id
     </update>
 
     <delete id="deleteArticle">
       delete from t_article where id=#{id}
     </delete>
 
+
+    <resultMap id="articleResult" type="Article">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="submit" property="submit"/>
+        <result column="is_top" property="is_top"/>
+        <result column="category_id" property="category_id"/>
+        <result column="create_time" property="create_time"/>
+        <result column="modified_time" property="modified_time"/>
+        <result column="content" property="content"/>
+    </resultMap>
 </mapper>

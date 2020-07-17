@@ -1,45 +1,77 @@
 package com.nocte.controller;
 
-import com.nocte.mapper.CategoryMapper;
+import com.nocte.annotation.UserLoginToken;
 import com.nocte.pojo.Category;
+import com.nocte.service.impl.CategoryServiceImpl;
+import com.nocte.utils.RestResponse;
+import com.nocte.utils.RestResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("category")
 public class CategoryController {
 
     @Autowired
-    private CategoryMapper categoryMapper;
+    private CategoryServiceImpl categoryService;
 
-    @GetMapping("get")
-    public List<Category> queryAllCategory(){
-        return categoryMapper.queryAllCategory();
+    @GetMapping("getList")
+    @UserLoginToken
+    public RestResponse<Object> queryAllCategory(){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(categoryService.queryAllCategory());
+        return response;
     }
 
     @GetMapping("getById")
-    public Category queryCategoryById(int id){
-        return categoryMapper.queryCategoryById(id);
+    @UserLoginToken
+    public RestResponse<Object> queryCategoryById(int id){
+        RestResponse<Object> response = null;
+        response = RestResponseUtil.success(categoryService.queryCategoryById(id));
+        return response;
     }
 
     @PostMapping("add")
-    public int addCategory(Category category){
-        return categoryMapper.addCategory(category);
+    @UserLoginToken
+    public RestResponse<Object> addCategory(Category category){
+        RestResponse<Object> response = null;
+        int i = categoryService.addCategory(category);
+        if(i == 0){
+            response = RestResponseUtil.success();
+        }else {
+            response = RestResponseUtil.error(-1,"添加失败");
+        }
+        return response;
     }
 
     @PostMapping("update")
-    public int updateCategory(Category category){
-        return categoryMapper.updateCategory(category);
+    @UserLoginToken
+    public RestResponse<Object> updateCategory(Category category){
+        RestResponse<Object> response = null;
+        int i = categoryService.updateCategory(category);
+        if(i == 0){
+            response = RestResponseUtil.success();
+        }else {
+            response = RestResponseUtil.error(-1,"更新失败");
+        }
+        return response;
     }
 
     @PostMapping("delete")
-    public int deleteCategory(int id){
-        return categoryMapper.deleteCategory(id);
+    @UserLoginToken
+    public RestResponse<Object> deleteCategory(int id){
+        RestResponse<Object> response = null;
+        int i = categoryService.deleteCategory(id);
+        if(i == 0){
+            response = RestResponseUtil.success();
+        }else {
+            response = RestResponseUtil.error(-1,"删除失败");
+        }
+        return response;
     }
 
 }
